@@ -19,6 +19,20 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/About.vue')
     }
+  },
+  {
+    path: '/producto',
+    name: 'producto',
+    component: function() {
+      return import('../views/productos-form')
+    }
+  },
+  {
+    path: '/producto/:id/edit',
+    name: 'producto.edit',
+    component: function() {
+      return import('../views/productos-form')
+    }
   }
 ]
 

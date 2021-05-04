@@ -2,13 +2,16 @@
   <v-card
       class="mx-auto"
       max-width="200"
+      max-height="640"
+
   >
     <v-img
         height="150"
-        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+        :src="producto.url_imagen"
+        @click="cambiarImagen"
     />
 
-    <v-card-title>Cafe Badilico</v-card-title>
+    <v-card-title>{{ producto.nombre }}</v-card-title>
 
     <v-card-text>
       <v-row
@@ -30,10 +33,10 @@
       </v-row>
 
       <div class="my-4 subtitle-1">
-        45.34 BOB
+        {{ producto.precio }} BOB
       </div>
 
-      <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
+      <div> {{ producto.descripcion }} </div>
     </v-card-text>
 
     <v-divider class="mx-4"/>
@@ -43,13 +46,13 @@
           active-class="deep-purple accent-4 white--text"
           column
       >
-        <v-chip>
+        <v-chip :visible="false">
           <v-icon>mdi-thumb-up</v-icon>
-          (3)
+          ({{ producto.like }})
         </v-chip>
         <v-chip>
           <v-icon>mdi-thumb-down</v-icon>
-          (2)
+          ({{ producto.dislike }})
         </v-chip>
       </v-chip-group>
     </v-card-text>
@@ -58,6 +61,7 @@
       <v-btn
           color="blue"
           text
+          @click="openForm(producto.id)"
       >
         Editar
       </v-btn>
@@ -75,7 +79,16 @@
 
 <script>
 export default {
-  name: "producto"
+  name: "producto",
+  props: ['producto'],
+  methods:{
+    cambiarImagen(){
+      this.$toastr.success("Aqui se cambia la imagen")
+    },
+    openForm(id) {
+      this.$router.push({name: 'producto.edit', params: { id: id}})
+    }
+  }
 }
 </script>
 
