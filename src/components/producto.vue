@@ -36,7 +36,7 @@
         {{ producto.precio }} BOB
       </div>
 
-      <div> {{ producto.descripcion }} </div>
+      <div> {{ producto.descripcion }}</div>
     </v-card-text>
 
     <v-divider class="mx-4"/>
@@ -74,19 +74,36 @@
       </v-btn>
     </v-card-actions>
 
+    <v-dialog
+        v-model="dialogImagen"
+        persistent
+        max-width="500px"
+    >
+      <aubir-imagen
+          :producto="producto"
+          @salir="dialogImagen = false"
+      />
+    </v-dialog>
+
   </v-card>
 </template>
 
 <script>
+import AubirImagen from "./aubir-imagen";
+
 export default {
   name: "producto",
+  components: {AubirImagen},
   props: ['producto'],
-  methods:{
-    cambiarImagen(){
-      this.$toastr.success("Aqui se cambia la imagen")
+  data:() =>({
+    dialogImagen: false
+  }),
+  methods: {
+    cambiarImagen() {
+      this.dialogImagen = true;
     },
     openForm(id) {
-      this.$router.push({name: 'producto.edit', params: { id: id}})
+      this.$router.push({name: 'producto.edit', params: {id: id}})
     }
   }
 }
