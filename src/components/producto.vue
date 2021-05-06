@@ -7,7 +7,7 @@
   >
     <v-img
         height="150"
-        :src="'http://127.0.0.1:8000/imagenes/' + producto.url_imagen"
+        :src="(producto.url_imagen !== null && producto.url_imagen.includes('http')) ? producto.url_imagen : 'http://127.0.0.1:8000/imagenes/' + producto.url_imagen"
         @click="cambiarImagen"
     />
 
