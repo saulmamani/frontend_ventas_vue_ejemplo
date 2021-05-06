@@ -1,13 +1,13 @@
 <template>
   <v-card
       class="mx-auto"
-      max-width="200"
+      max-width="280"
       max-height="640"
 
   >
     <v-img
         height="150"
-        :src="producto.url_imagen"
+        :src="'http://127.0.0.1:8000/imagenes/' + producto.url_imagen"
         @click="cambiarImagen"
     />
 
@@ -82,6 +82,7 @@
       <aubir-imagen
           :producto="producto"
           @salir="dialogImagen = false"
+          @listar="$emit('listar')"
       />
     </v-dialog>
 

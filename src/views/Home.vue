@@ -42,6 +42,7 @@
         <v-col cols="12" md="4" sm="6" v-for="(item, index) in productos" :key="index">
           <producto
             :producto="item"
+            @listar="getProductos"
           />
         </v-col>
       </v-row>

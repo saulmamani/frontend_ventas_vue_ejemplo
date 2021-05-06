@@ -10,8 +10,8 @@
         <h3>Subir imagen para el producto: {{ producto.codigo }}</h3>
         <v-spacer/>
         <v-btn
-          icon
-          @click="$emit('salir')"
+            icon
+            @click="$emit('salir')"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -19,7 +19,8 @@
       <v-divider/>
 
       <v-card-text>
-        <input type="file" ref="url_imagen" name="url_imagen" id="url_imagen" accept="image/gif, image/jpeg, image/png, image/jpg"
+        <input type="file" ref="url_imagen" name="url_imagen" id="url_imagen"
+               accept="image/gif, image/jpeg, image/png, image/jpg"
                @change="escogerDocumento"
                required>
       </v-card-text>
@@ -50,53 +51,28 @@ export default {
     escogerDocumento(event) {
       this.file = event.target.files[0];
     },
-    subirArchivo(url, formData, config) {
-      return new Promise((resolve, reject) => {
-        this.axios.put(
-            url,
-            formData,
-            config
-        ).then(response => {
-          if (response.data.res) {
-            this.$toastr.success(response.data.message);
-          } else {
-            this.$toastr.error("Error: Puede que un archivo esté protegico con constraseña, revise y vuelva a intentarlo" + "\n" + response.data.e);
-          }
-          resolve(response);
-        }).catch(e => {
-          this.$toastr.error("Error: Puede que un archivo esté protegico con constraseña, revise y vuelva a intentarlo" + "\n" + e.response);
-          reject(e);
-        })
-      });
-    },
-    async save() {
+    save() {
       let url = this.url + "set_imagen/" + this.producto.id;
-      let formData = new FormData();
+      let data = new FormData();
 
-      //cargando varios archivos para enviarlo al servidor
-      // for (let i = 0; i < this.files.length; i++) {
-      //   let file = this.files[i];
-      //   formData.append("url[" + i + "]", file);
-      // }
+      data.append('imagen', this.file);
+      data.append('_method', 'PUT');
 
-      let config = {
-        headers: {'Content-Type': 'multipart/form-data'}
-      };
-
+      //Enviamos la petición
       this.loading = true;
-      await this.subirArchivo(url, formData, config).then(response => {
+      this.axios.post(url, data).then(response => {
         if (response.data.res) {
           this.$emit('listar');
           this.$emit('salir')
-        }
-        else{
+        } else {
           this.$toastr.error(response.data.message);
         }
+      }).catch(e => {
+        this.$toastr.error(e.response.error);
       }).finally(() => {
         this.loading = false;
       });
     }
-
   }
 }
 </script>
