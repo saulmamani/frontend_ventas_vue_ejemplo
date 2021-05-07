@@ -9,6 +9,7 @@
           outlined
           small
           @click="openForm()"
+          v-if="isLogin"
       >
         Nuevo producto
       </v-btn>
@@ -54,7 +55,7 @@
 <script>
 
 import Producto from "../components/producto";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 
 export default {
   name: 'Home',
@@ -64,7 +65,10 @@ export default {
     loading: false
   }),
   computed: {
-    ...mapState(['url'])
+    ...mapState(['url']),
+    ...mapGetters({
+      isLogin: "isLogin"
+    })
   },
   mounted() {
     this.getProductos()

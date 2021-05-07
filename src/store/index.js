@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
-import {VResponsive} from "vuetify/lib";
 
 Vue.use(Vuex)
 
@@ -12,10 +11,10 @@ export default new Vuex.Store({
     user: {}
   },
   getters:{
-    isLogin({state}){
+    isLogin(state){
       return state.token !== null;
     },
-    getUser({state}){
+    getUser(state){
       return state.user;
     },
   },
@@ -29,7 +28,7 @@ export default new Vuex.Store({
   },
   actions: {
     getUser({commit, state}){
-      const url = state.url + "/user";
+      const url = state.url + "user";
       axios.get(url).then(response => {
         commit('setUser', response.data);
       }).catch(e => {
@@ -37,11 +36,11 @@ export default new Vuex.Store({
         commit('setUser', {});
       })
     },
-    getToken({context, params}){
+    getToken(context, params){
       return new Promise((resolve, reject) => {
         axios({
           method: 'POST',
-          url: context.url + "login",
+          url: context.state.url + "login",
           data: params
         }).then(response => {
           if(response.data.res){
@@ -51,9 +50,8 @@ export default new Vuex.Store({
             axios.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
             context.commit('setToken', response.data.token);
             context.commit('setUser', response.data.user);
-
-            resolve(response)
           }
+          resolve(response)
         }).catch(e => {
           reject(e);
         })
@@ -64,7 +62,7 @@ export default new Vuex.Store({
         return new Promise((resolve, reject) => {
           axios({
             method: 'POST',
-            url: context.url + "logout",
+            url: context.state.url + "logout",
           }).then(response => {
             if(response.data.res){
               localStorage.removeItem('token');

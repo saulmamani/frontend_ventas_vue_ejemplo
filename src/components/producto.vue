@@ -62,6 +62,7 @@
           color="blue"
           text
           @click="openForm(producto.id)"
+          v-if="isLogin"
       >
         Editar
       </v-btn>
@@ -69,6 +70,7 @@
       <v-btn
           color="red"
           text
+          v-if="isLogin"
       >
         Eliminar
       </v-btn>
@@ -91,6 +93,7 @@
 
 <script>
 import AubirImagen from "./aubir-imagen";
+import {mapGetters} from "vuex";
 
 export default {
   name: "producto",
@@ -99,6 +102,11 @@ export default {
   data:() =>({
     dialogImagen: false
   }),
+  computed: {
+    ...mapGetters({
+      isLogin: "isLogin"
+    })
+  },
   methods: {
     cambiarImagen() {
       this.dialogImagen = true;
