@@ -22,6 +22,12 @@
       </v-card-title>
       <v-divider/>
       <v-card-text>
+
+        <errores
+            v-if="errores !== null"
+            :errores="errores"
+        />
+
         <v-text-field
             label="Código *"
             v-model="producto.codigo"
@@ -39,8 +45,7 @@
             v-model="producto.nombre"
             required
             :rules="[
-                       (v) => !!v || 'Nombre es requerido',
-                       v => (v && v.length >= 3 && v.length <= 30) || 'desripcion debe ser de 3 a 30 caracteres'
+                       (v) => !!v || 'Nombre es requerido'
                     ]"
         ></v-text-field>
 
@@ -63,9 +68,6 @@
                     ]"
         ></v-text-field>
 
-        <pre>
-          {{ errores }}
-        </pre>
       </v-card-text>
 
       <v-card-actions>
@@ -80,14 +82,17 @@
       </v-card-actions>
 
     </v-form>
+
   </v-card>
 </template>
 
 <script>
 import {mapState} from "vuex";
+import Errores from "../components/errores";
 
 export default {
   name: "productos-form",
+  components: {Errores},
   data: () => ({
     isNew: false,
     valid: false,
@@ -96,9 +101,9 @@ export default {
     producto: {
       user: {}
     },
-    errores: []
+    errores: null
   }),
-  computed:{
+  computed: {
     ...mapState(['url'])
   },
   created() {
@@ -127,7 +132,7 @@ export default {
         return;
 
       this.loading = true
-      const url = this.isNew ?  (this.url + "productos") : (this.url + "productos/" + this.producto.id);
+      const url = this.isNew ? (this.url + "productos") : (this.url + "productos/" + this.producto.id);
       this.axios(
           {
             method: this.isNew ? 'POST' : 'PUT',
@@ -135,12 +140,12 @@ export default {
             data: this.producto
           }
       ).then(response => {
-        if(response.data.res) {
+        if (response.data.res) {
           this.$toastr.success(response.data.message)
           this.$router.push({name: 'Home'})
-        }
-        else
+        } else
           this.$toastr.error(response.data.message)
+        this.errores = null
       }).catch(e => {
         console.log(e.response.data.errors);
         this.errores = e.response.data.errors;
