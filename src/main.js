@@ -17,6 +17,31 @@ Vue.use(VueToastr2)
 
 Vue.config.productionTip = false
 
+//token global, errores axios globales
+if(store.getters.isLogin) {
+  axios.defaults.headers.common.Authorization = "Bearer " + store.state.token;
+  store.dispatch("getUsuario")
+}
+
+// inicia usuarios
+axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  if(error.response.status === 403 || error.response.status === 404){
+    router.push({name:'error'});
+  }
+  if(error.response.status === 401) //si no esta autenticado o no existe tocken
+  {
+    toastr.error("Usuario invitado")
+
+    store.dispatch("destroyToken").then(response => {
+      toastr.succes(response.data.message)
+      router.push({name: 'Home'});
+    })
+  }
+  return Promise.reject(error);
+});
+
 new Vue({
   router,
   store,
